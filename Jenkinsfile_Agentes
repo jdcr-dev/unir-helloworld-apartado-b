@@ -48,8 +48,8 @@ pipeline {
                         //bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
                         sh '''
                             whoami
-                            hostname
-                            
+                            hostname                                                    
+
                             bandit -r . -f custom -o bandit.out --msg-template "{abspath}:{line}: [{test_id}] {msg}" | echo "Bandit finished"
                         '''
                     
@@ -70,6 +70,8 @@ pipeline {
                             whoami
                             hostname
                             
+                            sleep 10
+
                             export PYTHONPATH=.
                             python3-coverage run --branch --source=app --omit=app/__init__.py,app/api.py -m pytest --junitxml=result-unit.xml test/unit
                             python3-coverage xml
@@ -89,7 +91,7 @@ pipeline {
                         sh '''
                             whoami
                             hostname
-                            
+                                                        
                             export FLASK_APP=app/api.py
                             flask run &                                                                                                                   
                             
