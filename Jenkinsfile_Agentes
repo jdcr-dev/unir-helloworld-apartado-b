@@ -40,6 +40,11 @@ pipeline {
                                 [threshold: 10, type:'TOTAL', unstable: false]],
                             enabledForFailure: true // https://github.com/jenkinsci/warnings-ng-plugin/blob/main/plugin/src/main/java/io/jenkins/plugins/analysis/core/steps/IssuesRecorder.java
                     }
+                    post {
+                        always {            
+                            cleanWs()                    
+                        }
+                    }
                 }
                 
                 stage('Security Test') {
@@ -60,6 +65,11 @@ pipeline {
                                 [threshold: 4, type:'TOTAL', unstable: false]],
                             enabledForFailure: true
                     }
+                    post {
+                        always {            
+                            cleanWs()                    
+                        }
+                    }
                 }
 
                 stage('Unit - Coverage') {
@@ -79,6 +89,11 @@ pipeline {
                             cobertura coberturaReportFile: 'coverage.xml', onlyStable: false, failUnstable: false, conditionalCoverageTargets: '100,80,90', lineCoverageTargets: '100,85,95'
                             junit 'result*.xml'
                             stash name: STASH_RESULTADOS_UNIT, includes: 'result*.xml,coverage.xml'
+                        }
+                    }
+                    post {
+                        always {            
+                            cleanWs()                    
                         }
                     }
                 }
@@ -105,6 +120,11 @@ pipeline {
                         catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {                            
                             junit 'result*.xml'
                             perfReport sourceDataFiles: 'test/jmeter/flask.jtl'
+                        }
+                    }
+                    post {
+                        always {            
+                            cleanWs()                    
                         }
                     }
                 }
