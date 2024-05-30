@@ -31,6 +31,9 @@ pipeline {
                         sh '''
                             whoami
                             hostname
+
+                            sleep 10
+
                             flake8 --exit-zero --format=pylint app > flake8.out
                         '''
                         recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], 
@@ -50,6 +53,8 @@ pipeline {
                             whoami
                             hostname                                                    
 
+                            sleep 10 
+                            
                             bandit -r . -f custom -o bandit.out --msg-template "{abspath}:{line}: [{test_id}] {msg}" | echo "Bandit finished"
                         '''
                     
