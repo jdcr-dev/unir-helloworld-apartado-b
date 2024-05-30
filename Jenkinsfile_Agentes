@@ -24,7 +24,7 @@ pipeline {
         stage('Code Analysis') {        
             parallel {            
                 stage('Static') {
-                    agent { label 'linux-agent-1' }
+                    agent { label 'linux-agent-2' }
                     steps {
                         unstash name: STASH_CALCULADORA
 
@@ -42,7 +42,7 @@ pipeline {
                 }
                 
                 stage('Security Test') {
-                    agent { label 'linux-agent-1' }
+                    agent { label 'linux-agent-2' }
                     steps {
                         unstash name: STASH_CALCULADORA
                         //bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
@@ -98,21 +98,16 @@ pipeline {
                             export PYTHONPATH=.
                             pytest --junitxml=result-rest.xml --junitxml=result-unit.xml test/rest
 
-                            
+                            ~/jenkins/apache-jmeter-5.6.3/bin/jmeter.sh -n -t test/jmeter/P24-ApartadoB.jmx -l test/jmeter/flask.jtl
                         '''
                         //'D:\\Autoaprendizaje\\DevopsUnir\\apache-jmeter-5.6.3\\bin\\jmeter -n -t D:\\Autoaprendizaje\\DevopsUnir\\apache-jmeter-5.6.3\\bin\\P24-ApartadoB.jmx -f -l flask.jtl'                                
-                        catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {                            
+                        catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE') {                            
                             junit 'result*.xml'
-                            //perfReport sourceDataFiles: 'flask.jtl'
+                            perfReport sourceDataFiles: 'test/jmeter/flask.jtl'
                         }
                     }
                 }
             }
-        }  
-        stage('Results') {
-            steps { 
-                
-            }
-        }
+        }          
     }
 }
