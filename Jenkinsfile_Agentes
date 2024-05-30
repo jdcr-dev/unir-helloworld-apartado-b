@@ -45,11 +45,12 @@ pipeline {
                     agent { label 'linux-agent-2' }
                     steps {
                         unstash name: STASH_CALCULADORA
-
+                        //bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
                         sh '''
                             whoami
                             hostname
-                            bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
+                            
+                            bandit -r . -f custom -o bandit.out --msg-template "{abspath}:{line}: [{test_id}] {msg}"
                         '''
                     
                         recordIssues tools: [pyLint(name: 'Bandit', pattern: 'bandit.out')], 
