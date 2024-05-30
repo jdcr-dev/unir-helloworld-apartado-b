@@ -29,6 +29,8 @@ pipeline {
                         unstash name: STASH_CALCULADORA
 
                         sh '''
+                            whoami
+                            hostname
                             flake8 --exit-zero --format=pylint app > flake8.out
                         '''
                         recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], 
@@ -45,6 +47,8 @@ pipeline {
                         unstash name: STASH_CALCULADORA
 
                         sh '''
+                            whoami
+                            hostname
                             bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
                         '''
                     
@@ -63,7 +67,7 @@ pipeline {
 
                         sh '''
                             whoami
-                            hostmame
+                            hostname
                             
                             export PYTHONPATH=.
                             coverage run --branch --source=app --omit=app\\__init__.py,app\\api.py -m pytest --junitxml=result-unit.xml test\\unit
@@ -83,7 +87,7 @@ pipeline {
                         unstash name: STASH_CALCULADORA            
                         sh '''
                             whoami
-                            hostmame
+                            hostname
                             
                             export FLASK_APP=app/api.py
                             flask run &                                                                                                                   
