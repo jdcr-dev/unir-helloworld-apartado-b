@@ -28,7 +28,7 @@ pipeline {
                     steps {
                         unstash name: STASH_CALCULADORA
 
-                        bat '''
+                        sh '''
                             flake8 --exit-zero --format=pylint app > flake8.out
                         '''
                         recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], 
@@ -44,7 +44,7 @@ pipeline {
                     steps {
                         unstash name: STASH_CALCULADORA
 
-                        bat '''
+                        sh '''
                             bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
                         '''
                     
@@ -61,10 +61,13 @@ pipeline {
                     steps {
                         unstash name: STASH_CALCULADORA
 
-                        bat '''
-                        set PYTHONPATH=%WORKSPACE%
-                        coverage run --branch --source=app --omit=app\\__init__.py,app\\api.py -m pytest --junitxml=result-unit.xml test\\unit
-                        coverage xml
+                        sh '''
+                            whoami
+                            hostmame
+                            
+                            export PYTHONPATH=.
+                            coverage run --branch --source=app --omit=app\\__init__.py,app\\api.py -m pytest --junitxml=result-unit.xml test\\unit
+                            coverage xml
                         '''
                         catchError(buildResult:'UNSTABLE', stageResult: 'FAILURE') {
                             cobertura coberturaReportFile: 'coverage.xml', onlyStable: false, failUnstable: false, conditionalCoverageTargets: '100,80,90', lineCoverageTargets: '100,85,95'
@@ -78,11 +81,14 @@ pipeline {
                     agent { label 'linux-agent-2' }
                     steps {
                         unstash name: STASH_CALCULADORA            
-                        bat '''
-                            set FLASK_APP=app/api.py
-                            start flask run                                                                                                                    
+                        sh '''
+                            whoami
+                            hostmame
                             
-                            set PYTHONPATH=%WORKSPACE%
+                            export FLASK_APP=app/api.py
+                            flask run &                                                                                                                   
+                            
+                            export PYTHONPATH=.
                             pytest --junitxml=result-rest.xml --junitxml=result-unit.xmltest/rest
 
                             'D:\\Autoaprendizaje\\DevopsUnir\\apache-jmeter-5.6.3\\bin\\jmeter -n -t D:\\Autoaprendizaje\\DevopsUnir\\apache-jmeter-5.6.3\\bin\\P24-ApartadoB.jmx -f -l flask.jtl'                                
