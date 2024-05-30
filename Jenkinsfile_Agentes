@@ -42,7 +42,7 @@ pipeline {
                 }
                 
                 stage('Security Test') {
-                    agent { label 'linux-agent-2' }
+                    agent { label 'linux-agent-1' }
                     steps {
                         unstash name: STASH_CALCULADORA
                         //bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
@@ -83,7 +83,7 @@ pipeline {
                 }
 
                 stage('Rest') {
-                    agent { label 'linux-agent-2' }
+                    agent { label 'linux-agent-1' }
                     steps {
                         unstash name: STASH_CALCULADORA            
                         sh '''
@@ -101,7 +101,7 @@ pipeline {
                         //'D:\\Autoaprendizaje\\DevopsUnir\\apache-jmeter-5.6.3\\bin\\jmeter -n -t D:\\Autoaprendizaje\\DevopsUnir\\apache-jmeter-5.6.3\\bin\\P24-ApartadoB.jmx -f -l flask.jtl'                                
                         catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {                            
                             junit 'result*.xml'
-                            perfReport sourceDataFiles: 'flask.jtl'
+                            //perfReport sourceDataFiles: 'flask.jtl'
                         }
                     }
                 }
