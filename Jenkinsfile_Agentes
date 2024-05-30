@@ -30,9 +30,7 @@ pipeline {
 
                         sh '''
                             whoami
-                            hostname
-
-                            sleep 10
+                            hostname                            
 
                             flake8 --exit-zero --format=pylint app > flake8.out
                         '''
@@ -51,10 +49,8 @@ pipeline {
                         //bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
                         sh '''
                             whoami
-                            hostname                                                    
+                            hostname                                                                                
 
-                            sleep 10 
-                            
                             bandit -r . -f custom -o bandit.out --msg-template "{abspath}:{line}: [{test_id}] {msg}" | echo "Bandit finished"
                         '''
                     
@@ -67,15 +63,13 @@ pipeline {
                 }
 
                 stage('Coverage') {
-                    agent { label 'linux-agent-1' }
+                    agent { label 'linux-agent-2' }
                     steps {
                         unstash name: STASH_CALCULADORA
 
                         sh '''
                             whoami
-                            hostname
-                            
-                            sleep 10
+                            hostname                                                        
 
                             export PYTHONPATH=.
                             python3-coverage run --branch --source=app --omit=app/__init__.py,app/api.py -m pytest --junitxml=result-unit.xml test/unit
