@@ -23,6 +23,8 @@ pipeline {
         
         stage('Static') {
             steps {
+                unstash name: STASH_CALCULADORA
+
                 bat '''
                     flake8 --exit-zero --format=pylint app > flake8.out
                 '''
@@ -36,6 +38,8 @@ pipeline {
         
         stage('Security Test') {
             steps {
+                unstash name: STASH_CALCULADORA
+
                 bat '''
                     bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
                 '''
@@ -50,6 +54,8 @@ pipeline {
         
         stage('Start Flask') {
             steps {
+                unstash name: STASH_CALCULADORA
+                
                 bat '''
                     set FLASK_APP=app/api.py
                     start flask run
@@ -59,6 +65,8 @@ pipeline {
         
         stage('Coverage') {
             steps {
+                unstash name: STASH_CALCULADORA
+
                 bat '''
                 set PYTHONPATH=%WORKSPACE%
                 coverage run --branch --source=app --omit=app\\__init__.py,app\\api.py -m pytest --junitxml=result-unit.xml test\\unit
@@ -71,7 +79,7 @@ pipeline {
             }
         }
 
-        /* No me hace falta lo he integrado con el coverage 
+        /* No me hace falta por que lo he integrado con el coverage 
         stage('Unit') {
             steps {                        
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {                            
@@ -86,6 +94,8 @@ pipeline {
         */    
         stage('Rest'){
             steps {
+                unstash name: STASH_CALCULADORA
+                
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {                            
                     bat '''                                                                                                                    
                         set PYTHONPATH=%WORKSPACE%
