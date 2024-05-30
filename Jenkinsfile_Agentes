@@ -30,10 +30,8 @@ pipeline {
 
                         sh '''
                             whoami
-                            hostname                            
+                            hostname                                                        
 
-                            sleep 20
-                            
                             flake8 --exit-zero --format=pylint app > flake8.out
                         '''
                         recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], 
@@ -51,9 +49,7 @@ pipeline {
                         //bandit --exit-zero -r . -f custom -o bandit.out --severity-level medium --msg-template "{abspath}:{line}: [{test_id}] {msg}"
                         sh '''
                             whoami
-                            hostname                                                                                
-
-                            sleep 20
+                            hostname                                                                                                            
 
                             bandit -r . -f custom -o bandit.out --msg-template "{abspath}:{line}: [{test_id}] {msg}" | echo "Bandit finished"
                         '''
@@ -73,9 +69,7 @@ pipeline {
 
                         sh '''
                             whoami
-                            hostname                                                        
-
-                            sleep 20
+                            hostname                                                                                    
 
                             export PYTHONPATH=.
                             python3-coverage run --branch --source=app --omit=app/__init__.py,app/api.py -m pytest --junitxml=result-unit.xml test/unit
