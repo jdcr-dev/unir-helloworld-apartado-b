@@ -32,6 +32,8 @@ pipeline {
                             whoami
                             hostname                            
 
+                            sleep 20
+                            
                             flake8 --exit-zero --format=pylint app > flake8.out
                         '''
                         recordIssues tools: [flake8(name: 'Flake8', pattern: 'flake8.out')], 
@@ -51,6 +53,8 @@ pipeline {
                             whoami
                             hostname                                                                                
 
+                            sleep 20
+
                             bandit -r . -f custom -o bandit.out --msg-template "{abspath}:{line}: [{test_id}] {msg}" | echo "Bandit finished"
                         '''
                     
@@ -62,7 +66,7 @@ pipeline {
                     }
                 }
 
-                stage('Coverage') {
+                stage('Unit - Coverage') {
                     agent { label 'linux-agent-2' }
                     steps {
                         unstash name: STASH_CALCULADORA
@@ -70,6 +74,8 @@ pipeline {
                         sh '''
                             whoami
                             hostname                                                        
+
+                            sleep 20
 
                             export PYTHONPATH=.
                             python3-coverage run --branch --source=app --omit=app/__init__.py,app/api.py -m pytest --junitxml=result-unit.xml test/unit
@@ -83,7 +89,7 @@ pipeline {
                     }
                 }
                 
-                stage('Rest') {
+                stage('Rest - Performance') {
                     agent { label 'linux-agent-1' }
                     steps {
                         unstash name: STASH_CALCULADORA            
