@@ -96,9 +96,11 @@ pipeline {
                     bat '''                                                                                                                    
                         set FLASK_APP=app/api.py
                         start /B flask run                                                                                                         
-                        
-                        timeout /t 10 /nobreak
-
+                    '''
+                    
+                    sleep(time: 10, unit: 'SECONDS') // Sleep for 10 seconds
+                    
+                    bat '''
                         set PYTHONPATH=%WORKSPACE%
                         pytest --junitxml=result-rest.xml --junitxml=result-rest.xml test/rest                        
                     '''
