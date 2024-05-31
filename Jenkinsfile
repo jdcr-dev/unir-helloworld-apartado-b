@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Get Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/jdcr-dev/unir-helloworld-apartado-b'
+                git branch: 'feature_fix_coverage', url: 'https://github.com/jdcr-dev/unir-helloworld-apartado-b'
                 
                 // Correccion respecto a la practica anterior donde le hacia en otro stage y podia tener problemas
                 stash name: STASH_CALCULADORA, includes: '**'
