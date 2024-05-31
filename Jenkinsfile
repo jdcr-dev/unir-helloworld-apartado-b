@@ -19,6 +19,11 @@ pipeline {
                 // Correccion respecto a la practica anterior donde le hacia en otro stage y podia tener problemas
                 stash name: STASH_CALCULADORA, includes: '**'
             }
+            post {
+                always {            
+                    cleanWs()                    
+                }
+            }
         }
         
         stage('Static') {
@@ -33,6 +38,11 @@ pipeline {
                         [threshold: 8, type: 'TOTAL', unstable: true], 
                         [threshold: 10, type:'TOTAL', unstable: false]],
                     enabledForFailure: true // https://github.com/jenkinsci/warnings-ng-plugin/blob/main/plugin/src/main/java/io/jenkins/plugins/analysis/core/steps/IssuesRecorder.java
+            }
+            post {
+                always {            
+                    cleanWs()                    
+                }
             }
         }
         
@@ -50,6 +60,11 @@ pipeline {
                         [threshold: 4, type:'TOTAL', unstable: false]],
                     enabledForFailure: true
             }
+            post {
+                always {            
+                    cleanWs()                    
+                }
+            }
         }
         
         stage('Start Flask') {
@@ -60,6 +75,11 @@ pipeline {
                     set FLASK_APP=app/api.py
                     start flask run
                 '''
+            }
+            post {
+                always {            
+                    cleanWs()                    
+                }
             }
         }
         
@@ -75,6 +95,11 @@ pipeline {
                 catchError(buildResult:'UNSTABLE', stageResult: 'FAILURE') {
                     cobertura coberturaReportFile: 'coverage.xml', onlyStable: false, failUnstable: false, conditionalCoverageTargets: '100,80,90', lineCoverageTargets: '100,85,95'
                     junit 'result*.xml'
+                }
+            }
+            post {
+                always {            
+                    cleanWs()                    
                 }
             }
         }
@@ -104,6 +129,11 @@ pipeline {
                     junit 'result*.xml'
                 }
             }
+            post {
+                always {            
+                    cleanWs()                    
+                }
+            }
         }
         
         stage('Performance') {
@@ -111,6 +141,11 @@ pipeline {
                 bat 'D:\\Autoaprendizaje\\DevopsUnir\\apache-jmeter-5.6.3\\bin\\jmeter -n -t D:\\Autoaprendizaje\\DevopsUnir\\apache-jmeter-5.6.3\\bin\\P24-ApartadoB.jmx -f -l flask.jtl'
                 perfReport sourceDataFiles: 'flask.jtl'
             }
+            post {
+                always {            
+                    cleanWs()                    
+                }
+            }           
         }
     }
 }
