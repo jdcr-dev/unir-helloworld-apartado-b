@@ -81,11 +81,11 @@ pipeline {
                     junit 'result*.xml'
                 }
             }
-            // post {
-            //     always {            
-            //         cleanWs()                    
-            //     }
-            // }
+            post {
+                always {            
+                    cleanWs()                    
+                }
+            }
         }
         
         stage('Rest'){
