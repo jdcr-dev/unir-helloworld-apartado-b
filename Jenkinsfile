@@ -65,29 +65,17 @@ pipeline {
                     cleanWs()                    
                 }
             }
-        }
-        
-        stage('Start Flask') {
-            steps {
-                unstash name: STASH_CALCULADORA
-                
-                bat '''
-                    set FLASK_APP=app/api.py
-                    start flask run
-                '''
-            }
-            post {
-                always {            
-                    cleanWs()                    
-                }
-            }
-        }
+        }                
         
         stage('Coverage') {
             steps {
                 unstash name: STASH_CALCULADORA
 
-                bat '''
+                bat '''                
+                                                        
+                set FLASK_APP=app/api.py
+                start /B flask run                                                                                                         
+
                 set PYTHONPATH=%WORKSPACE%
                 coverage run --branch --source=app --omit=app\\__init__.py,app\\api.py -m pytest --junitxml=result-unit.xml test\\unit
                 coverage xml
@@ -103,20 +91,7 @@ pipeline {
                 }
             }
         }
-
-        /* No me hace falta por que lo he integrado con el coverage 
-        stage('Unit') {
-            steps {                        
-                catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {                            
-                    bat '''                                
-                        set PYTHONPATH=%WORKSPACE%
-                        pytest --junitxml=result-unit.xml test/unit
-                    '''
-                    junit 'result*.xml'
-                }
-            }
-        }
-        */    
+        
         stage('Rest'){
             steps {
                 unstash name: STASH_CALCULADORA
