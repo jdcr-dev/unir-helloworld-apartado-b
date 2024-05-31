@@ -97,7 +97,7 @@ pipeline {
                         set FLASK_APP=app/api.py
                         start /B flask run                                                                                                         
                         
-                        timeout /t 10 /nobreak
+                        timeout /t 10 /nobreak 1> nul
 
                         set PYTHONPATH=%WORKSPACE%
                         pytest --junitxml=result-rest.xml --junitxml=result-rest.xml test/rest                        
