@@ -67,15 +67,11 @@ pipeline {
             }
         }                
         
-        stage('Coverage') {
+        stage('Unit - Coverage') {
             steps {
                 unstash name: STASH_CALCULADORA
 
-                bat '''                
-                                                        
-                set FLASK_APP=app/api.py
-                start /B flask run                                                                                                         
-
+                bat '''                                                                                                                                                                                      
                 set PYTHONPATH=%WORKSPACE%
                 coverage run --branch --source=app --omit=app\\__init__.py,app\\api.py -m pytest --junitxml=result-unit.xml test\\unit
                 coverage xml
@@ -98,17 +94,20 @@ pipeline {
                 
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {                            
                     bat '''                                                                                                                    
+                        set FLASK_APP=app/api.py
+                        start /B flask run                                                                                                         
+                        
                         set PYTHONPATH=%WORKSPACE%
-                        pytest --junitxml=result-rest.xml --junitxml=result-unit.xmltest/rest
+                        pytest --junitxml=result-rest.xml --junitxml=result-rest.xml test/rest                        
                     '''
                     junit 'result*.xml'
                 }
             }
-            post {
-                always {            
-                    cleanWs()                    
-                }
-            }
+            // post {
+            //     always {            
+            //         cleanWs()                    
+            //     }
+            // }
         }
         
         stage('Performance') {
