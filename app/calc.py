@@ -1,11 +1,13 @@
 import app
-
+from typing import Final
 
 class InvalidPermissions(Exception):
     pass
 
 
 class Calculator:
+    SQRT_VALUE: Final[float] = 0.5
+
     def add(self, x, y):
         self.check_types(x, y)
         return x + y
