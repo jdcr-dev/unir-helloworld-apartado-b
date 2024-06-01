@@ -1,13 +1,11 @@
 import app
-from typing import Final
+
 
 class InvalidPermissions(Exception):
     pass
 
 
 class Calculator:
-    SQRT_VALUE: Final[float] = 0.5
-
     def add(self, x, y):
         self.check_types(x, y)
         return x + y
@@ -30,10 +28,6 @@ class Calculator:
     def power(self, x, y):
         self.check_types(x, y)
         return x ** y
-    
-    def sqrt(self, x):
-        self.check_types(x)
-        return self.power(x, self.SQRT_VALUE)
 
     def check_types(self, x, y):
         if not isinstance(x, (int, float)) or                                                not isinstance(y, (int, float)):
