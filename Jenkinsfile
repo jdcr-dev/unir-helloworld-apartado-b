@@ -75,8 +75,8 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {                            
                     bat '''                                                                                                                    
                         set FLASK_APP=app/api.py
-                        start /B flask run         
-                        start /B java -jar D:\\Autoaprendizaje\\DevopsUnir\\wiremock-standalone-3.6.0.jar --port 9090 --root-dir test\\wiremock                                                                                                
+                        start flask run         
+                        start java -jar D:\\Autoaprendizaje\\DevopsUnir\\wiremock-standalone-3.6.0.jar --port 9090 --root-dir test\\wiremock                                                                                                
                     '''
                     
                     sleep(time: 10, unit: 'SECONDS') // Sleep for 10 seconds
