@@ -98,8 +98,7 @@ pipeline {
         }
     }
     post {
-        always {            
-            sleep(time: 20, unit: 'SECONDS') // Sleep for 10 seconds
+        always {                        
             cleanWs(deleteDirs: true, disableDeferredWipeout: true)                 
         }
     }
