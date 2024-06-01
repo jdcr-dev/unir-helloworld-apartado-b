@@ -95,12 +95,13 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', stageResult: 'SUCCESS') {                            
                     bat '''                                                                                                                    
                         set FLASK_APP=app/api.py
-                        start /B flask run                                                                                                         
+                        start /B flask run         
+                        start /B java -jar D:\\Autoaprendizaje\\DevopsUnir\\apache-jmeter-5.6.3\\bin\\jmeter.jar -n -t D:\\Autoaprendizaje\\DevopsUnir\\wiremock-standalone-3.6.0.jar --port 9090 --root-dir test\\wiremock                                                                                                
                     '''
                     
                     sleep(time: 10, unit: 'SECONDS') // Sleep for 10 seconds
                     
-                    bat '''
+                    bat '''                                                
                         set PYTHONPATH=%WORKSPACE%
                         pytest --junitxml=result-rest.xml --junitxml=result-rest.xml test/rest                        
                     '''
