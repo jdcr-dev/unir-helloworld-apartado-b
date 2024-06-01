@@ -99,6 +99,7 @@ pipeline {
     }
     post {
         always {            
+            sleep(time: 10, unit: 'SECONDS') // Sleep for 10 seconds
             cleanWs()                    
         }
     }
